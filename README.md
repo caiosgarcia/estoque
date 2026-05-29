@@ -36,7 +36,7 @@ http://localhost:5000
 5. 🔄 Movimentações (Insert, Delete, Select)
 6. 👥 Usuários (Insert, Update, Delete, Select)
 7. 📊 Relatório de Estoque
-8. 🌐 Importar dados da web (fakestoreapi.com via `requests`)
+8. 🌐 Importar dados JSON
 9. 📤 Exportar JSON + ZIP
 10. ℹ️ Sobre
 
