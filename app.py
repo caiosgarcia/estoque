@@ -299,7 +299,7 @@ def exportar():
     return send_file(buf, mimetype='application/zip',
                      as_attachment=True, download_name='estoque_export.zip')
 
-# ── importar dados ───────────────────────────────────────────────────
+# ── importar dados da web ───────────────────────────────────────────────────
 
 @app.route('/importar')
 @login_required
@@ -309,59 +309,26 @@ def importar_page():
     conn.close()
     return render_template('importar.html', importados=importados)
 
-@app.route('/importar/executar', methods=['POST'])
+@app.route('/importar/executar')
 @login_required
 def importar_executar():
-    arquivo = request.files.get('arquivo')
-    if not arquivo or not arquivo.filename.endswith('.json'):
-        flash('Selecione um arquivo .json válido.', 'erro')
-        return redirect(url_for('importar_page'))
+    url = 'https://fakestoreapi.com/products'
     try:
-        dados = json.loads(arquivo.read().decode('utf-8'))
+        resp = requests.get(url, timeout=10)
+        dados = resp.json()
         conn = get_db()
-        count_cat = count_prod = count_mov = count_usr = 0
-
-        for item in dados.get('usuarios', []):
-            existe = conn.execute('SELECT id FROM usuarios WHERE usuario=?', (item['usuario'],)).fetchone()
-            if not existe:
-                conn.execute('INSERT INTO usuarios (usuario,senha,nome) VALUES (?,?,?)',
-                    (item['usuario'], item.get('senha','123456'), item['nome']))
-                count_usr += 1
-            else:
-                conn.execute('UPDATE usuarios SET nome=? WHERE usuario=?',
-                    (item['nome'], item['usuario']))
-
-        for item in dados.get('categorias', []):
-            existe = conn.execute('SELECT id FROM categorias WHERE nome=?', (item['nome'],)).fetchone()
-            if not existe:
-                conn.execute('INSERT INTO categorias (nome,descricao) VALUES (?,?)',
-                    (item['nome'], item.get('descricao','')))
-                count_cat += 1
-            else:
-                conn.execute('UPDATE categorias SET descricao=? WHERE nome=?',
-                    (item.get('descricao',''), item['nome']))
-
-        for item in dados.get('produtos', []):
-            existe = conn.execute('SELECT id FROM produtos WHERE nome=?', (item['nome'],)).fetchone()
+        cat = conn.execute("SELECT id FROM categorias WHERE nome='Eletrônicos'").fetchone()
+        cat_id = cat['id'] if cat else None
+        count = 0
+        for item in dados[:10]:
+            existe = conn.execute('SELECT id FROM produtos WHERE nome=?', (item['title'][:80],)).fetchone()
             if not existe:
                 conn.execute('INSERT INTO produtos (nome,descricao,preco,quantidade,categoria_id) VALUES (?,?,?,?,?)',
-                    (item['nome'], item.get('descricao',''), float(item.get('preco',0)),
-                     int(item.get('quantidade',0)), item.get('categoria_id')))
-                count_prod += 1
-            else:
-                conn.execute('UPDATE produtos SET descricao=?,preco=?,quantidade=?,categoria_id=? WHERE nome=?',
-                    (item.get('descricao',''), float(item.get('preco',0)),
-                     int(item.get('quantidade',0)), item.get('categoria_id'), item['nome']))
-
-        for item in dados.get('movimentacoes', []):
-            conn.execute('INSERT INTO movimentacoes (produto_id,tipo,quantidade,data,observacao) VALUES (?,?,?,?,?)',
-                (item['produto_id'], item['tipo'], item['quantidade'],
-                 item.get('data',''), item.get('observacao','')))
-            count_mov += 1
-
-        conn.commit()
-        conn.close()
-        flash(f'Importado: {count_usr} usuários, {count_cat} categorias, {count_prod} produtos, {count_mov} movimentações.', 'ok')
+                    (item['title'][:80], f"{item['description'][:100]} [importado]",
+                     round(item['price'], 2), 10, cat_id))
+                count += 1
+        conn.commit(); conn.close()
+        flash(f'{count} produtos importados da web (fakestoreapi.com)!', 'ok')
     except Exception as e:
         flash(f'Erro ao importar: {e}', 'erro')
     return redirect(url_for('importar_page'))
