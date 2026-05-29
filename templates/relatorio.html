@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Relatório — EstoqueRP{% endblock %}
+{% block content %}
+<div class="page-title">📊 <span>Relatório de Estoque</span></div>
+
+{% set total_val = namespace(v=0) %}
+{% for p in produtos %}{% set total_val.v = total_val.v + p.preco * p.quantidade %}{% endfor %}
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+  <div class="card" style="margin:0;text-align:center;">
+    <div style="color:var(--muted);font-size:.8rem;margin-bottom:.4rem;">VALOR TOTAL EM ESTOQUE</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--accent)">
+      R$ {{ '%.2f'|format(total_val.v) }}
+    </div>
+  </div>
+  <div class="card" style="margin:0;text-align:center;">
+    <div style="color:var(--muted);font-size:.8rem;margin-bottom:.4rem;">TOTAL DE ITENS</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:#3498db">
+      {{ produtos|length }}
+    </div>
+  </div>
+  <div class="card" style="margin:0;text-align:center;">
+    <div style="color:var(--muted);font-size:.8rem;margin-bottom:.4rem;">ITENS COM ESTOQUE BAIXO (&lt;5)</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--erro)">
+      {{ produtos|selectattr('quantidade','lt',5)|list|length }}
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📋 Posição por Produto</h2>
+  <table>
+    <thead><tr><th>Produto</th><th>Categoria</th><th>Preço Unit.</th><th>Qtd.</th><th>Valor Total</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for p in produtos %}
+    <tr>
+      <td><strong>{{ p.nome }}</strong></td>
+      <td>{{ p.categoria_nome or '—' }}</td>
+      <td>R$ {{ '%.2f'|format(p.preco) }}</td>
+      <td>{{ p.quantidade }}</td>
+      <td>R$ {{ '%.2f'|format(p.preco * p.quantidade) }}</td>
+      <td>
+        {% if p.quantidade == 0 %}
+          <span class="badge badge-saida">Sem estoque</span>
+        {% elif p.quantidade < 5 %}
+          <span class="badge badge-baixo">Baixo</span>
+        {% else %}
+          <span class="badge badge-entrada">OK</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Nenhum produto.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

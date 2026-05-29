@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Movimentações — EstoqueRP{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+  <div class="page-title" style="margin:0;">🔄 <span>Movimentações</span></div>
+  <button class="btn btn-primary" onclick="abrirModal('modal-novo')">+ Nova Movimentação</button>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Qtd.</th><th>Observação</th><th>Ações</th></tr></thead>
+    <tbody>
+    {% for m in movimentacoes %}
+    <tr>
+      <td style="color:var(--muted);font-size:.82rem;">{{ m.data }}</td>
+      <td><strong>{{ m.produto_nome }}</strong></td>
+      <td><span class="badge badge-{{ m.tipo }}">{{ m.tipo|capitalize }}</span></td>
+      <td>{{ m.quantidade }}</td>
+      <td style="color:var(--muted)">{{ m.observacao or '—' }}</td>
+      <td>
+        <a href="{{ url_for('movimentacao_excluir', id=m.id) }}" class="btn btn-danger btn-sm"
+           onclick="return confirm('Excluir movimentação?')">🗑️</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Nenhuma movimentação.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id="modal-novo" class="modal-overlay"><div class="modal">
+  <h3>+ Nova Movimentação</h3>
+  <form method="POST" action="{{ url_for('movimentacao_nova') }}">
+    <div class="form-row">
+      <label>Produto</label>
+      <select name="produto_id" required>
+        <option value="">— Selecione —</option>
+        {% for p in produtos %}<option value="{{ p.id }}">{{ p.nome }} ({{ p.quantidade }} em estoque)</option>{% endfor %}
+      </select>
+    </div>
+    <div class="form-row cols-2">
+      <div>
+        <label>Tipo</label>
+        <select name="tipo" required>
+          <option value="entrada">Entrada</option>
+          <option value="saida">Saída</option>
+        </select>
+      </div>
+      <div><label>Quantidade</label><input name="quantidade" type="number" min="1" value="1" required></div>
+    </div>
+    <div class="form-row"><label>Observação</label><input name="observacao" placeholder="Opcional"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-novo')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Registrar</button>
+    </div>
+  </form>
+</div></div>
+{% endblock %}

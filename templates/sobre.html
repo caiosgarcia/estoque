@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Sobre — EstoqueRP{% endblock %}
+{% block content %}
+<div class="page-title">ℹ️ <span>Sobre o Projeto</span></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+  <div class="card" style="margin:0;">
+    <h2>📦 O Projeto</h2>
+    <div style="color:var(--muted);font-size:.9rem;line-height:1.7;">
+      <p><strong style="color:var(--text)">Tema:</strong> Sistema de Controle de Estoque</p>
+      <br>
+      <p><strong style="color:var(--text)">Objetivo:</strong> Desenvolver uma aplicação web para gerenciamento de estoque, permitindo o controle de produtos, categorias, movimentações de entrada e saída, além de exportação e importação de dados.</p>
+      <br>
+      <p><strong style="color:var(--text)">Tecnologias:</strong></p>
+      <ul style="margin-top:.5rem;margin-left:1.2rem;">
+        <li>Python + Flask (back-end)</li>
+        <li>SQLite (banco de dados)</li>
+        <li>HTML/CSS (interfaces)</li>
+        <li>Módulo <code style="background:var(--surface);padding:.1rem .3rem;border-radius:3px;">requests</code> (importação)</li>
+        <li>Módulo <code style="background:var(--surface);padding:.1rem .3rem;border-radius:3px;">zipfile / json</code> (exportação)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin:0;">
+    <h2>👨‍💻 Desenvolvedores</h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <!-- Edite os dados abaixo com seus dados reais -->
+      <div style="background:var(--surface);border-radius:8px;padding:1rem;">
+        <div style="font-weight:600;color:var(--text);">Caio Satyro Garcia</div>
+        <div style="color:var(--accent);font-size:.85rem;font-family:monospace;margin-top:.2rem;">Matrícula: 2840482323031</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:1.5rem;">
+  <h2>📋 Interfaces Implementadas (UIs)</h2>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-top:.5rem;">
+    {% for ui in [
+      ('🔐','Login'),('🏠','Menu/Dashboard'),('📦','Produtos'),('🗂️','Categorias'),
+      ('🔄','Movimentações'),('👥','Usuários'),('📊','Relatório'),
+      ('🌐','Importar'),('📤','Exportar'),('ℹ️','Sobre')
+    ] %}
+    <div style="background:var(--surface);border-radius:8px;padding:.8rem;text-align:center;">
+      <div style="font-size:1.4rem;">{{ ui[0] }}</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">{{ ui[1] }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

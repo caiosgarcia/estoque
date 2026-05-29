@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Login — EstoqueRP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --bg:#0f1117; --surface:#1a1d26; --card:#21252f; --accent:#f0a500;
+          --text:#e8eaf0; --muted:#7a7f8e; --border:#2d3141; --erro:#e74c3c; }
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text);
+         min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  .container { width:100%; max-width:400px; padding:2rem; }
+  .logo { text-align:center; margin-bottom:2.5rem; }
+  .logo h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:2rem;
+             color:var(--accent); letter-spacing:-1px; }
+  .logo p { color:var(--muted); font-size:.9rem; margin-top:.3rem; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:2rem; }
+  label { display:block; font-size:.75rem; color:var(--muted); margin-bottom:.4rem;
+          text-transform:uppercase; letter-spacing:.05em; font-weight:500; }
+  input { width:100%; background:var(--surface); border:1px solid var(--border);
+          border-radius:8px; padding:.75rem 1rem; color:var(--text);
+          font-family:'DM Sans',sans-serif; font-size:.95rem; margin-bottom:1.2rem; transition:.2s; }
+  input:focus { outline:none; border-color:var(--accent); }
+  button { width:100%; background:var(--accent); color:#000; border:none; border-radius:8px;
+           padding:.8rem; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem;
+           cursor:pointer; transition:.2s; margin-top:.4rem; }
+  button:hover { opacity:.9; }
+  .flash { background:rgba(231,76,60,.1); border:1px solid rgba(231,76,60,.3);
+           color:var(--erro); padding:.7rem 1rem; border-radius:8px; font-size:.85rem; margin-bottom:1rem; }
+  .hint { color:var(--muted); font-size:.78rem; text-align:center; margin-top:1.2rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <h1>📦 EstoqueRP</h1>
+    <p>Sistema de Controle de Estoque</p>
+  </div>
+  <div class="card">
+    {% with msgs = get_flashed_messages(with_categories=True) %}
+      {% for cat, msg in msgs %}
+        <div class="flash">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+    <form method="POST">
+      <label>Usuário</label>
+      <input type="text" name="usuario" placeholder="Digite seu usuário" required autofocus>
+      <label>Senha</label>
+      <input type="password" name="senha" placeholder="Digite sua senha" required>
+      <button type="submit">Entrar →</button>
+    </form>
+    <p class="hint">Padrão: <strong>admin</strong> / <strong>admin123</strong></p>
+  </div>
+</div>
+</body>
+</html>

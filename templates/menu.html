@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Menu — EstoqueRP{% endblock %}
+{% block content %}
+<div class="page-title">Bem-vindo, <span>{{ session.nome }}</span></div>
+
+<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem;">
+  <div class="card" style="text-align:center; border-top:3px solid #f0a500; margin-bottom:0;">
+    <div style="font-size:2rem; margin-bottom:.5rem;">📦</div>
+    <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:#f0a500;">{{ total_produtos }}</div>
+    <div style="color:var(--muted); font-size:.85rem; margin-top:.2rem;">Produtos</div>
+  </div>
+  <div class="card" style="text-align:center; border-top:3px solid #3498db; margin-bottom:0;">
+    <div style="font-size:2rem; margin-bottom:.5rem;">🗂️</div>
+    <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:#3498db;">{{ total_categorias }}</div>
+    <div style="color:var(--muted); font-size:.85rem; margin-top:.2rem;">Categorias</div>
+  </div>
+  <div class="card" style="text-align:center; border-top:3px solid #2ecc71; margin-bottom:0;">
+    <div style="font-size:2rem; margin-bottom:.5rem;">🔄</div>
+    <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:#2ecc71;">{{ total_movim }}</div>
+    <div style="color:var(--muted); font-size:.85rem; margin-top:.2rem;">Movimentações</div>
+  </div>
+  <div class="card" style="text-align:center; border-top:3px solid #e74c3c; margin-bottom:0;">
+    <div style="font-size:2rem; margin-bottom:.5rem;">⚠️</div>
+    <div style="font-size:2rem; font-family:'Syne',sans-serif; font-weight:800; color:#e74c3c;">{{ estoque_baixo }}</div>
+    <div style="color:var(--muted); font-size:.85rem; margin-top:.2rem;">Estoque Baixo</div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+  <a href="{{ url_for('produtos') }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:.2s; margin-bottom:0;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:1.8rem; margin-bottom:.6rem;">📦</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; margin-bottom:.3rem;">Produtos</div>
+      <div style="color:var(--muted); font-size:.83rem;">Cadastrar, editar e excluir produtos</div>
+    </div>
+  </a>
+  <a href="{{ url_for('categorias') }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:.2s; margin-bottom:0;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:1.8rem; margin-bottom:.6rem;">🗂️</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; margin-bottom:.3rem;">Categorias</div>
+      <div style="color:var(--muted); font-size:.83rem;">Organizar produtos por categoria</div>
+    </div>
+  </a>
+  <a href="{{ url_for('movimentacoes') }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:.2s; margin-bottom:0;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:1.8rem; margin-bottom:.6rem;">🔄</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; margin-bottom:.3rem;">Movimentações</div>
+      <div style="color:var(--muted); font-size:.83rem;">Registrar entradas e saídas</div>
+    </div>
+  </a>
+  <a href="{{ url_for('usuarios') }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:.2s; margin-bottom:0;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:1.8rem; margin-bottom:.6rem;">👥</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; margin-bottom:.3rem;">Usuários</div>
+      <div style="color:var(--muted); font-size:.83rem;">Gerenciar acesso ao sistema</div>
+    </div>
+  </a>
+  <a href="{{ url_for('relatorio') }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:.2s; margin-bottom:0;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:1.8rem; margin-bottom:.6rem;">📊</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; margin-bottom:.3rem;">Relatório</div>
+      <div style="color:var(--muted); font-size:.83rem;">Visualizar posição do estoque</div>
+    </div>
+  </a>
+  <a href="{{ url_for('importar_page') }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:.2s; margin-bottom:0;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:1.8rem; margin-bottom:.6rem;">🌐</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; margin-bottom:.3rem;">Importar / Exportar</div>
+      <div style="color:var(--muted); font-size:.83rem;">Importar da web e exportar JSON/ZIP</div>
+    </div>
+  </a>
+</div>
+{% endblock %}

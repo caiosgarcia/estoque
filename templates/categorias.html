@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Categorias — EstoqueRP{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+  <div class="page-title" style="margin:0;">🗂️ <span>Categorias</span></div>
+  <button class="btn btn-primary" onclick="abrirModal('modal-novo')">+ Nova Categoria</button>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>#</th><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>
+    <tbody>
+    {% for c in categorias %}
+    <tr>
+      <td style="color:var(--muted)">{{ c.id }}</td>
+      <td><strong>{{ c.nome }}</strong></td>
+      <td style="color:var(--muted)">{{ c.descricao or '—' }}</td>
+      <td style="display:flex;gap:.4rem;">
+        <button class="btn btn-secondary btn-sm" onclick="abrirEd(this)"
+  data-id="{{ c.id }}" data-nome="{{ c.nome|e }}" data-desc="{{ c.descricao|e }}">✏️ Editar</button>
+        <a href="{{ url_for('categoria_excluir', id=c.id) }}" class="btn btn-danger btn-sm"
+           onclick="return confirm('Excluir categoria?')">🗑️</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">Nenhuma categoria.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id="modal-novo" class="modal-overlay"><div class="modal">
+  <h3>+ Nova Categoria</h3>
+  <form method="POST" action="{{ url_for('categoria_nova') }}">
+    <div class="form-row"><label>Nome</label><input name="nome" required></div>
+    <div class="form-row"><label>Descrição</label><input name="descricao"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-novo')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+  </form>
+</div></div>
+
+<div id="modal-editar" class="modal-overlay"><div class="modal">
+  <h3>✏️ Editar Categoria</h3>
+  <form method="POST" id="form-ed">
+    <div class="form-row"><label>Nome</label><input id="e-nome" name="nome" required></div>
+    <div class="form-row"><label>Descrição</label><input id="e-desc" name="descricao"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-editar')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Atualizar</button>
+    </div>
+  </form>
+</div></div>
+<script>
+function abrirEd(btn){
+  document.getElementById('form-ed').action='/categorias/editar/'+btn.dataset.id;
+  document.getElementById('e-nome').value=btn.dataset.nome;
+  document.getElementById('e-desc').value=btn.dataset.desc||'';
+  abrirModal('modal-editar');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Usuários — EstoqueRP{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+  <div class="page-title" style="margin:0;">👥 <span>Usuários</span></div>
+  <button class="btn btn-primary" onclick="abrirModal('modal-novo')">+ Novo Usuário</button>
+</div>
+<div class="card">
+  <table>
+    <thead><tr><th>#</th><th>Nome</th><th>Usuário</th><th>Senha</th><th>Ações</th></tr></thead>
+    <tbody>
+    {% for u in usuarios %}
+    <tr>
+      <td style="color:var(--muted)">{{ u.id }}</td>
+      <td><strong>{{ u.nome }}</strong></td>
+      <td style="font-family:monospace;color:var(--accent)">{{ u.usuario }}</td>
+      <td style="color:var(--muted)">••••••</td>
+      <td style="display:flex;gap:.4rem;">
+        <button class="btn btn-secondary btn-sm" onclick="abrirEd(this)"
+          data-id="{{ u.id }}"
+          data-nome="{{ u.nome|e }}"
+          data-senha="{{ u.senha|e }}">✏️ Editar</button>
+        {% if u.id != 1 %}
+        <a href="{{ url_for('usuario_excluir', id=u.id) }}" class="btn btn-danger btn-sm"
+           onclick="return confirm('Excluir usuário?')">🗑️</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id="modal-novo" class="modal-overlay"><div class="modal">
+  <h3>+ Novo Usuário</h3>
+  <form method="POST" action="{{ url_for('usuario_novo') }}">
+    <div class="form-row"><label>Nome Completo</label><input name="nome" required></div>
+    <div class="form-row cols-2">
+      <div><label>Usuário</label><input name="usuario" required></div>
+      <div><label>Senha</label><input name="senha" type="password" required></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-novo')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Criar</button>
+    </div>
+  </form>
+</div></div>
+
+<div id="modal-editar" class="modal-overlay"><div class="modal">
+  <h3>✏️ Editar Usuário</h3>
+  <form method="POST" id="form-ed">
+    <div class="form-row"><label>Nome Completo</label><input id="e-nome" name="nome" required></div>
+    <div class="form-row"><label>Nova Senha</label><input id="e-senha" name="senha" type="password" required></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-editar')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Atualizar</button>
+    </div>
+  </form>
+</div></div>
+<script>
+function abrirEd(btn){
+  document.getElementById('form-ed').action='/usuarios/editar/'+btn.dataset.id;
+  document.getElementById('e-nome').value=btn.dataset.nome||'';
+  document.getElementById('e-senha').value=btn.dataset.senha||'';
+  abrirModal('modal-editar');
+}
+</script>
+{% endblock %}

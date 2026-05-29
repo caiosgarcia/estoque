@@ -1,0 +1,5 @@
+estoque.db
+__pycache__/
+*.pyc
+*.pyo
+.env
